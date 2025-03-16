@@ -1,0 +1,18 @@
+version: '3.8'
+services:
+  backend:
+    build: .
+    ports:
+      - "8080:8080"
+    networks:
+      - chatnet
+
+  frontend:
+    build: ./src/main/frontend
+    ports:
+      - "80:80"
+    networks:
+      - chatnet
+
+networks:
+  chatnet:
