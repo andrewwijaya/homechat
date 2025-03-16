@@ -1,4 +1,4 @@
-package com.bourchier.homechat;
+package com.bourchier.homechat.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -18,6 +18,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
+        System.out.println("Registering WebSocket endpoint at /chat");
         registry.addEndpoint("/chat").setAllowedOrigins("*").withSockJS();
     }
 }

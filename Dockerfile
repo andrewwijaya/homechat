@@ -1,4 +1,4 @@
-FROM openjdk:17
+FROM openjdk:23
 WORKDIR /app
 COPY target/homechat-0.0.1-SNAPSHOT.jar chat-app.jar
 EXPOSE 8080
