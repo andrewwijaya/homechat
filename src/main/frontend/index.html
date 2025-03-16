@@ -8,6 +8,9 @@
 </head>
 <body>
 <h2>Home Chat</h2>
+<label for="username">Username:</label>
+<input type="text" id="username" placeholder="Enter your name">
+<br><br>
 <div id="chatBox" style="border: 1px solid #000; height: 300px; overflow-y: auto; padding: 10px;"></div>
 <input type="text" id="messageInput" placeholder="Type a message..." />
 <button onclick="sendMessage()">Send</button>
@@ -19,22 +22,26 @@
     // Connect and subscribe to the chat topic
     stompClient.connect({}, function(frame) {
         stompClient.subscribe('/topic/chat', function(message) {
-            var chatBox = document.getElementById('chatBox');
-            var msg = JSON.parse(message.body);
-
-            // Append message to chat box
-            chatBox.innerHTML += `<p><strong>${msg.sender}:</strong> ${msg.content}</p>`;
-            chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll to the latest message
-        });
+            let msgData = JSON.parse(message.body);
+            let msgDisplay = `<p><strong>${msgData.sender}:</strong> ${msgData.content}</p>`;
+            document.getElementById("chatBox").innerHTML += msgDisplay;        });
     });
 
     // Function to send a message
     function sendMessage() {
-        var input = document.getElementById("messageInput");
+        let username = document.getElementById("username").value.trim();
+        let input = document.getElementById("messageInput");
+
+        if (!username) {
+            alert("Please enter a username before sending messages!");
+            return;
+        }
+
         if (input.value.trim() !== "") {
             var message = { sender: "User", content: input.value, type: "CHAT" };
             console.log("Sending message:", message); // Debugging
-            stompClient.send("/topic/chat", {}, JSON.stringify({ sender: "User", content: input.value, type: "CHAT" }));
+            stompClient.send("/topic/chat", {}, JSON.stringify({ sender: username, content: input.value, type: "CHAT"
+            }));
             input.value = ""; // Clear input field after sending
         }
     }
