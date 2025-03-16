@@ -2,17 +2,22 @@ version: '3.8'
 services:
   backend:
     build: .
+    container_name: chat-backend
     ports:
       - "8080:8080"
     networks:
-      - chatnet
+      - chat-network
 
   frontend:
     build: ./src/main/frontend
+    container_name: chat-frontend
     ports:
       - "80:80"
+    depends_on:
+      - backend
     networks:
-      - chatnet
+      - chat-network
 
 networks:
-  chatnet:
+  chat-network:
+    driver: bridge

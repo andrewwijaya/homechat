@@ -34,7 +34,7 @@
         if (input.value.trim() !== "") {
             var message = { sender: "User", content: input.value, type: "CHAT" };
             console.log("Sending message:", message); // Debugging
-            stompClient.send("/app/message", {}, JSON.stringify({ sender: "User", content: input.value, type: "CHAT" }));
+            stompClient.send("/topic/chat", {}, JSON.stringify({ sender: "User", content: input.value, type: "CHAT" }));
             input.value = ""; // Clear input field after sending
         }
     }
