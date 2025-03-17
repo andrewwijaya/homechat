@@ -24,6 +24,15 @@ public class ChatMessage {
         return sender;
     }
 
+    @Override
+    public String toString() {
+        return "ChatMessage{" +
+                "sender='" + sender + '\'' +
+                ", content='" + content + '\'' +
+                ", type=" + type +
+                '}';
+    }
+
     public void setSender(String sender) {
         this.sender = sender;
     }

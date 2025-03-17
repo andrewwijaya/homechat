@@ -21,10 +21,25 @@
 
     // Connect and subscribe to the chat topic
     stompClient.connect({}, function(frame) {
+
         stompClient.subscribe('/topic/chat', function(message) {
             let msgData = JSON.parse(message.body);
-            let msgDisplay = `<p><strong>${msgData.sender}:</strong> ${msgData.content}</p>`;
-            document.getElementById("chatBox").innerHTML += msgDisplay;        });
+            displayMessage(msgData);
+<!--            let msgDisplay = `<p><strong>${msgData.sender}:</strong> ${msgData.content}</p>`;-->
+<!--            document.getElementById("chatBox").innerHTML += msgDisplay;-->
+        });
+
+        // Clear the chatbox before adding history
+        let chatBox = document.getElementById("chatBox");
+        chatBox.innerHTML = ""; // Clears previous content
+
+        stompClient.subscribe('/topic/history', function (message) {
+            let messages = JSON.parse(message.body);
+            messages.forEach(msg => displayMessage(msg)); // Append each message to chat
+        });
+
+        // Request chat history on connection
+        stompClient.send("/app/history", {});
     });
 
     // Function to send a message
@@ -40,10 +55,20 @@
         if (input.value.trim() !== "") {
             var message = { sender: "User", content: input.value, type: "CHAT" };
             console.log("Sending message:", message); // Debugging
-            stompClient.send("/topic/chat", {}, JSON.stringify({ sender: username, content: input.value, type: "CHAT"
+            stompClient.send("/app/sendMessage", {}, JSON.stringify({ sender: username, content: input.value, type: "CHAT"
             }));
             input.value = ""; // Clear input field after sending
         }
+    }
+
+    function displayMessage(message) {
+        let chatBox = document.getElementById("chatBox");
+        let messageElement = document.createElement("p");
+        messageElement.innerText = message.sender + ": " + message.content;
+        chatBox.appendChild(messageElement);
+
+        // Auto-scroll to the latest message
+        chatBox.scrollTop = chatBox.scrollHeight;
     }
 </script>
 </body>
