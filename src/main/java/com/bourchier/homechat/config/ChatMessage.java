@@ -1,4 +1,4 @@
-package com.bourchier.homechat;
+package com.bourchier.homechat.config;
 
 
 public class ChatMessage {
