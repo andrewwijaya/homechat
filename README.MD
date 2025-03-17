@@ -1,5 +1,5 @@
-# Homechat2
-Homechat2 is a very simple chat application for your home.
+# Homechat
+Homechat is a very simple chat application for your home.
 It really doesn't have any features you would expect a chat system to have, but something works.
 This is a toy project for me to get an application to run on docker/kubernetes.
 Architecture:
