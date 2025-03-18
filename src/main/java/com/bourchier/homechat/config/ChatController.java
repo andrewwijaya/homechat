@@ -40,6 +40,7 @@ public class ChatController {
         logger.info("Chat history size: {}", chatHistory.size());
         logger.info("SessionID: {}", sessionId);
 
+        //https://stackoverflow.com/questions/34929578/spring-websocket-sendtosession-send-message-to-specific-session
         SimpMessageHeaderAccessor headerAccessorOut = SimpMessageHeaderAccessor
                 .create(SimpMessageType.MESSAGE);
         headerAccessorOut.setSessionId(sessionId);
