@@ -5,6 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.SimpMessageType;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 import java.util.ArrayList;
@@ -13,9 +16,14 @@ import java.util.List;
 @Controller
 public class ChatController {
 
+    private final SimpMessagingTemplate messagingTemplate;
     private final List<ChatMessage> chatHistory = new ArrayList<>();
 
     private static final Logger logger = LoggerFactory.getLogger(ChatController.class);
+
+    public ChatController(SimpMessagingTemplate messagingTemplate) {
+        this.messagingTemplate = messagingTemplate;
+    }
 
     @MessageMapping("/sendMessage")
     @SendTo("/topic/chat")
@@ -25,12 +33,18 @@ public class ChatController {
         return message; // Broadcast message to all clients
     }
 
-    //chat history broadcasts to all connections, this is not good.
     @MessageMapping("/history")
-    @SendTo("/topic/history")
-    public List<ChatMessage> getChatHistory() {
+    public void getChatHistory(SimpMessageHeaderAccessor headerAccessor) {
+        String sessionId = headerAccessor.getSessionId();
         logger.info("Received chat history request");
         logger.info("Chat history size: {}", chatHistory.size());
-        return chatHistory; // Send all previous messages
+        logger.info("SessionID: {}", sessionId);
+
+        SimpMessageHeaderAccessor headerAccessorOut = SimpMessageHeaderAccessor
+                .create(SimpMessageType.MESSAGE);
+        headerAccessorOut.setSessionId(sessionId);
+        headerAccessorOut.setLeaveMutable(true);
+
+        messagingTemplate.convertAndSendToUser(sessionId, "/queue/history", chatHistory, headerAccessorOut.getMessageHeaders());
     }
 }

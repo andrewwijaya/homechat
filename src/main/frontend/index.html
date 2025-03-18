@@ -25,15 +25,13 @@
         stompClient.subscribe('/topic/chat', function(message) {
             let msgData = JSON.parse(message.body);
             displayMessage(msgData);
-<!--            let msgDisplay = `<p><strong>${msgData.sender}:</strong> ${msgData.content}</p>`;-->
-<!--            document.getElementById("chatBox").innerHTML += msgDisplay;-->
         });
 
         // Clear the chatbox before adding history
         let chatBox = document.getElementById("chatBox");
         chatBox.innerHTML = ""; // Clears previous content
 
-        stompClient.subscribe('/topic/history', function (message) {
+        stompClient.subscribe('/user/queue/history', function (message) {
             let messages = JSON.parse(message.body);
             messages.forEach(msg => displayMessage(msg)); // Append each message to chat
         });
