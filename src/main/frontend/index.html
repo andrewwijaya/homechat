@@ -2,25 +2,113 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Chat</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
     <style>
-        #chatBox p {
-            margin: 2px 0; /* Reduce space between messages */
-            padding: 0; /* Remove any extra padding */
-            line-height: 1.2; /* Adjust line spacing if needed */
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        /* Responsive Chat Box */
+        #chatBox {
+            border: 1px solid #000;
+            height: 300px;
+            overflow-y: auto;
+            padding: 10px;
+            background: #fff;
+            width: 100%;
+            max-width: 500px;
+            margin: auto;
+            border-radius: 5px;
+        }
+
+        /* Inputs & Button */
+        input[type="text"], button {
+            width: 100%;
+            max-width: 500px;
+            padding: 10px;
+            margin: 5px auto;
+            display: block;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Changelog Section */
+        #changelog {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-top: 2px solid #ddd;
+            width: 100%;
+            max-width: 500px;
+            margin: auto;
+            border-radius: 5px;
+        }
+
+        #changelog h3 {
+            margin-bottom: 5px;
+        }
+
+        #changelog ul {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+
+        /* Mobile Optimization */
+        @media (max-width: 600px) {
+            body {
+                padding: 5px;
+            }
+
+            #chatBox, input, button, #changelog {
+                max-width: 90%;
+            }
+
+            input[type="text"], button {
+                font-size: 14px;
+                padding: 8px;
+            }
         }
     </style>
 </head>
 <body>
+
 <h2>HomeChat v0</h2>
+
 <label for="username">Username:</label>
 <input type="text" id="username" placeholder="Enter your name">
-<br><br>
-<div id="chatBox" style="border: 1px solid #000; height: 300px; overflow-y: auto; padding: 10px;"></div>
-<input type="text" id="messageInput" placeholder="Type a message..." />
+
+<div id="chatBox"></div>
+
+<input type="text" id="messageInput" placeholder="Type a message...">
 <button onclick="sendMessage()">Send</button>
+
+<!-- Changelog Section -->
+<div id="changelog">
+    <h3>Changelog</h3>
+    <ul id="changelog-list"></ul>
+</div>
 
 <script>
     var socket = new SockJS('/chat'); // Connect to the WebSocket endpoint
@@ -82,6 +170,20 @@
             sendMessage();  // Call your function to send the message
         }
     });
+
+    function addChangelogItem(text) {
+        let changelogList = document.getElementById("changelog-list");
+        let newItem = document.createElement("li");
+        newItem.textContent = text;
+        changelogList.appendChild(newItem);
+    }
+
+    // Example: Add a new changelog entry dynamically
+    addChangelogItem("Functioning chat system");
+    addChangelogItem("Pick a username");
+    addChangelogItem("Chat history persisted in memory");
+    addChangelogItem("Send messages by hitting Enter");
 </script>
+
 </body>
 </html>
