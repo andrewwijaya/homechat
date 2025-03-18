@@ -5,9 +5,16 @@
     <title>Home Chat</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <style>
+        #chatBox p {
+            margin: 2px 0; /* Reduce space between messages */
+            padding: 0; /* Remove any extra padding */
+            line-height: 1.2; /* Adjust line spacing if needed */
+        }
+    </style>
 </head>
 <body>
-<h2>Home Chat</h2>
+<h2>HomeChat v0</h2>
 <label for="username">Username:</label>
 <input type="text" id="username" placeholder="Enter your name">
 <br><br>
@@ -62,12 +69,19 @@
     function displayMessage(message) {
         let chatBox = document.getElementById("chatBox");
         let messageElement = document.createElement("p");
-        messageElement.innerText = message.sender + ": " + message.content;
+        messageElement.innerHTML = `<strong>${message.sender}</strong>: ${message.content}`;
         chatBox.appendChild(messageElement);
 
         // Auto-scroll to the latest message
         chatBox.scrollTop = chatBox.scrollHeight;
     }
+
+    document.getElementById("messageInput").addEventListener("keydown", function (event) {
+        if (event.key === "Enter" && !event.shiftKey) {  // Check if Enter is pressed (without Shift)
+            event.preventDefault();  // Prevent new line (default behavior in textarea)
+            sendMessage();  // Call your function to send the message
+        }
+    });
 </script>
 </body>
 </html>
